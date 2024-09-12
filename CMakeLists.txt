@@ -80,16 +80,13 @@ if(MSVC)
     target_link_libraries( ${PROJECT_NAME}
         debug libhdf5_D debug zlibstaticd debug nnd
         optimized libhdf5 optimized zlibstatic optimized nn )
-      macro(COPYLIBALG_LAPACKDLL)
+      macro(COPYDLL)
         ADD_CUSTOM_COMMAND( TARGET ${PROJECT_NAME} POST_BUILD
           COMMAND ${CMAKE_COMMAND} -E copy
           $<$<CONFIG:Release>:../../../externals/ma_libs/build/$<CONFIG>/alg_lapack.dll>
           $<$<CONFIG:Debug>:../../../externals/ma_libs/build/$<CONFIG>/alg_lapackd.dll>
           ${CMAKE_BINARY_DIR}/../../$<CONFIG>
           )
-      endmacro()
-      cmake_language(CALL COPYLIBALG_LAPACKDLL)
-      macro(COPYNNDLL)
         ADD_CUSTOM_COMMAND( TARGET ${PROJECT_NAME} POST_BUILD
           COMMAND ${CMAKE_COMMAND} -E copy
           $<$<CONFIG:Release>:../../../externals/ma_libs/build/$<CONFIG>/nn.dll>
@@ -97,7 +94,7 @@ if(MSVC)
           ${CMAKE_BINARY_DIR}/../../$<CONFIG>
           )
       endmacro()
-      cmake_language(CALL COPYNNDLL)
+      cmake_language(CALL COPYDLL)
 else()
     target_link_libraries( ${PROJECT_NAME}
         debug hdf5 debug nnd
@@ -117,16 +114,13 @@ if(MSVC)
     target_link_libraries( ${PROJECT_NAME}
         debug libhdf5_D debug zlibstaticd debug nnd
         optimized libhdf5 optimized zlibstatic optimized nn)
-      macro(COPYLIBALG_LAPACKDLL)
+      macro(COPYDLL)
         ADD_CUSTOM_COMMAND( TARGET ${PROJECT_NAME} POST_BUILD
           COMMAND ${CMAKE_COMMAND} -E copy
           $<$<CONFIG:Release>:../../../externals/ma_libs/build/$<CONFIG>/alg_lapack.dll>
           $<$<CONFIG:Debug>:../../../externals/ma_libs/build/$<CONFIG>/alg_lapackd.dll>
           ${CMAKE_BINARY_DIR}/../../$<CONFIG>
           )
-      endmacro()
-      cmake_language(CALL COPYLIBALG_LAPACKDLL)
-      macro(COPYNNDLL)
         ADD_CUSTOM_COMMAND( TARGET ${PROJECT_NAME} POST_BUILD
           COMMAND ${CMAKE_COMMAND} -E copy
           $<$<CONFIG:Release>:../../../externals/ma_libs/build/$<CONFIG>/nn.dll>
@@ -134,7 +128,7 @@ if(MSVC)
           ${CMAKE_BINARY_DIR}/../../$<CONFIG>
           )
       endmacro()
-      cmake_language(CALL COPYNNDLL)
+      cmake_language(CALL COPYDLL)
 else()
     target_link_libraries( ${PROJECT_NAME}
         debug hdf5 debug nnd
