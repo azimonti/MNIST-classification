@@ -22,15 +22,14 @@ To get started with the neural networks:
 3. Compile the libraries in `ma_libs`
   ```
   cd external/ma_libs
-  ./cbuild.sh -t Debug
-  ./cbuild.sh -t Release
+  ./cbuild.sh --build-type Debug --cmake-params -DLIBNN=ON
+  ./cbuild.sh --build-type Release --cmake-params -DLIBNN=ON
   cd ..
   ```
 
   If any error or missing dependencies please look at the instructions [here](https://github.com/azimonti/ma_libs)
 
 4. Dowload the MNIST data (source links were retrieved from the page [here](https://github.com/cvdfoundation/mnist) as the original page gives a 403 Forbidden error), but as far as are the original files and are put in the `data/MNIST/` directory it will be fine.
-
   ```
   bash download_mnist_data.sh
   ```
