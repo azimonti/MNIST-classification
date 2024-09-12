@@ -1,0 +1,5 @@
+build/
+data/MNIST/
+*.eps
+*.hd5
+*.obj
