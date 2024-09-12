@@ -29,7 +29,12 @@ To get started with the neural networks:
   git submodule update --init --recursive
   ```
 
-3. Compile the libraries in `ma_libs`
+Further update of the submodule can be done with the command:
+  ```
+  git submodule update --remote
+  ```
+
+4. Compile the libraries in `ma_libs`
   ```
   cd externals/ma_libs
   ./cbuild.sh --build-type Debug --cmake-params -DLIBNN=ON
@@ -39,22 +44,22 @@ To get started with the neural networks:
 
   If any error or missing dependencies please look at the instructions [here](https://github.com/azimonti/ma_libs)
 
-4. Dowload the MNIST data (source links were retrieved from the page [here](https://github.com/cvdfoundation/mnist) as the original page gives a 403 Forbidden error), but as far as are the original files and are put in the `data/MNIST/` directory it will be fine.
+5. Dowload the MNIST data (source links were retrieved from the page [here](https://github.com/cvdfoundation/mnist) as the original page gives a 403 Forbidden error), but as far as are the original files and are put in the `data/MNIST/` directory it will be fine.
   ```
   bash download_mnist_data.sh
   ```
 
-5. Compile the binaries
+6. Compile the binaries
   ```
   ./cbuild.sh -t Release (or -t Debug)
   ```
 
-6. Create the configuation files
+7. Create the configuation files
   ```
   python nn_config.py
   ```
 
-7. Run the simulations
+8. Run the simulations
   ```
   ./build/Release/network1_bin
   ./build/Release/network2_bin --training_start
