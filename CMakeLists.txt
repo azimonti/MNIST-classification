@@ -19,7 +19,7 @@ if(MSVC)
     generic_libs_find(hdf5 ON       )
     generic_libs_find(zlib ON       )
     include_directories( ${HDF5_INCLUDE_DIRS}/src       )
-    include_directories( ${HDF5_INCLUDE_DIRS2}          )
+    include_directories( ${HDF5_INCLUDE_DIRS2}/hdf5     )
     link_directories( ${ZLIB_LIBRARY_PATH}              )
 else()
     generic_libs_find(hdf5 OFF      )
@@ -79,7 +79,25 @@ endif()
 if(MSVC)
     target_link_libraries( ${PROJECT_NAME}
         debug libhdf5_D debug zlibstaticd debug nnd
-        optimized libhdf5 optimized zlibstatic nn )
+        optimized libhdf5 optimized zlibstatic optimized nn )
+      macro(COPYLIBALG_LAPACKDLL)
+        ADD_CUSTOM_COMMAND( TARGET ${PROJECT_NAME} POST_BUILD
+          COMMAND ${CMAKE_COMMAND} -E copy
+          $<$<CONFIG:Release>:../../../externals/ma_libs/build/$<CONFIG>/alg_lapack.dll>
+          $<$<CONFIG:Debug>:../../../externals/ma_libs/build/$<CONFIG>/alg_lapackd.dll>
+          ${CMAKE_BINARY_DIR}/../../$<CONFIG>
+          )
+      endmacro()
+      cmake_language(CALL COPYLIBALG_LAPACKDLL)
+      macro(COPYNNDLL)
+        ADD_CUSTOM_COMMAND( TARGET ${PROJECT_NAME} POST_BUILD
+          COMMAND ${CMAKE_COMMAND} -E copy
+          $<$<CONFIG:Release>:../../../externals/ma_libs/build/$<CONFIG>/nn.dll>
+          $<$<CONFIG:Debug>:../../../externals/ma_libs/build/$<CONFIG>/nnd.dll>
+          ${CMAKE_BINARY_DIR}/../../$<CONFIG>
+          )
+      endmacro()
+      cmake_language(CALL COPYNNDLL)
 else()
     target_link_libraries( ${PROJECT_NAME}
         debug hdf5 debug nnd
@@ -99,6 +117,24 @@ if(MSVC)
     target_link_libraries( ${PROJECT_NAME}
         debug libhdf5_D debug zlibstaticd debug nnd
         optimized libhdf5 optimized zlibstatic optimized nn)
+      macro(COPYLIBALG_LAPACKDLL)
+        ADD_CUSTOM_COMMAND( TARGET ${PROJECT_NAME} POST_BUILD
+          COMMAND ${CMAKE_COMMAND} -E copy
+          $<$<CONFIG:Release>:../../../externals/ma_libs/build/$<CONFIG>/alg_lapack.dll>
+          $<$<CONFIG:Debug>:../../../externals/ma_libs/build/$<CONFIG>/alg_lapackd.dll>
+          ${CMAKE_BINARY_DIR}/../../$<CONFIG>
+          )
+      endmacro()
+      cmake_language(CALL COPYLIBALG_LAPACKDLL)
+      macro(COPYNNDLL)
+        ADD_CUSTOM_COMMAND( TARGET ${PROJECT_NAME} POST_BUILD
+          COMMAND ${CMAKE_COMMAND} -E copy
+          $<$<CONFIG:Release>:../../../externals/ma_libs/build/$<CONFIG>/nn.dll>
+          $<$<CONFIG:Debug>:../../../externals/ma_libs/build/$<CONFIG>/nnd.dll>
+          ${CMAKE_BINARY_DIR}/../../$<CONFIG>
+          )
+      endmacro()
+      cmake_language(CALL COPYNNDLL)
 else()
     target_link_libraries( ${PROJECT_NAME}
         debug hdf5 debug nnd

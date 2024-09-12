@@ -23,7 +23,7 @@ for FILE in "${FILES[@]}"; do
   # Check if both the gzipped and unzipped versions are missing
   if [ ! -f "$FILE_PATH" ] && [ ! -f "$FILE_GZ_PATH" ]; then
     echo "Downloading $FILE.gz..."
-    wget -P "$MNIST_DIR" "${BASE_URL}${FILE}.gz"
+    curl -o "$MNIST_DIR/$FILE.gz" "${BASE_URL}${FILE}.gz"
   else
     echo "$FILE or $FILE.gz already exists, skipping download."
   fi

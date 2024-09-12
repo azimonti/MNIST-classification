@@ -2,7 +2,15 @@
 
 Repository demonstrating neural network training for MNIST digit classification.
 
-# Getting Started
+## Required Tools
+
+- Git
+- CMake
+- clang
+- Fortran
+- curl
+
+## Getting Started
 
 To get started with the neural networks:
 
@@ -21,10 +29,10 @@ To get started with the neural networks:
 
 3. Compile the libraries in `ma_libs`
   ```
-  cd external/ma_libs
+  cd externals/ma_libs
   ./cbuild.sh --build-type Debug --cmake-params -DLIBNN=ON
   ./cbuild.sh --build-type Release --cmake-params -DLIBNN=ON
-  cd ..
+  cd ../..
   ```
 
   If any error or missing dependencies please look at the instructions [here](https://github.com/azimonti/ma_libs)
