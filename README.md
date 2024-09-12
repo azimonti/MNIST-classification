@@ -7,8 +7,10 @@ Repository demonstrating neural network training for MNIST digit classification.
 - Git
 - CMake
 - clang
-- Fortran
 - curl
+- Fortran
+- HDF5
+- Python
 
 ## Getting Started
 

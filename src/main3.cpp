@@ -88,12 +88,16 @@ int main(int argc, char** argv)
         std::vector<std::vector<float>> labels;
         for (const auto& img : imgTrain.Images())
         {
-            std::vector<float> fimg(img.begin(), img.end());
+            std::vector<float> fimg;
+            fimg.reserve(img.size());
+            for (const auto& val : img) { fimg.push_back(static_cast<float>(val)); }
             images.push_back(fimg);
         }
         for (const auto& lbl : imgTrain.Labels())
         {
-            std::vector<float> flbl(lbl.begin(), lbl.end());
+            std::vector<float> flbl;
+            flbl.reserve(lbl.size());
+            for (const auto& val : lbl) { flbl.push_back(static_cast<float>(val)); }
             labels.push_back(flbl);
         }
         nn1->SetMixed(true);
@@ -112,12 +116,16 @@ int main(int argc, char** argv)
         std::vector<std::vector<float>> labels;
         for (const auto& img : imgTest.Images())
         {
-            std::vector<float> fimg(img.begin(), img.end());
+            std::vector<float> fimg;
+            fimg.reserve(img.size());
+            for (const auto& val : img) { fimg.push_back(static_cast<float>(val)); }
             images.push_back(fimg);
         }
         for (const auto& lbl : imgTest.Labels())
         {
-            std::vector<float> flbl(lbl.begin(), lbl.end());
+            std::vector<float> flbl;
+            flbl.reserve(lbl.size());
+            for (const auto& val : lbl) { flbl.push_back(static_cast<float>(val)); }
             labels.push_back(flbl);
         }
         int correct    = nn2.TestGA(images, labels);
