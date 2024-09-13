@@ -83,22 +83,22 @@ if(MSVC)
       macro(COPYDLL)
         ADD_CUSTOM_COMMAND( TARGET ${PROJECT_NAME} POST_BUILD
           COMMAND ${CMAKE_COMMAND} -E copy
-          $<$<CONFIG:Release>:../../../externals/ma_libs/build/$<CONFIG>/alg_lapack.dll>
-          $<$<CONFIG:Debug>:../../../externals/ma_libs/build/$<CONFIG>/alg_lapackd.dll>
+          $<$<CONFIG:Release>:../../../externals/ma_libs/build/$<CONFIG>/cpp_alg_lapack.dll>
+          $<$<CONFIG:Debug>:../../../externals/ma_libs/build/$<CONFIG>/cpp_alg_lapackd.dll>
           ${CMAKE_BINARY_DIR}/../../$<CONFIG>
           )
         ADD_CUSTOM_COMMAND( TARGET ${PROJECT_NAME} POST_BUILD
           COMMAND ${CMAKE_COMMAND} -E copy
-          $<$<CONFIG:Release>:../../../externals/ma_libs/build/$<CONFIG>/nn.dll>
-          $<$<CONFIG:Debug>:../../../externals/ma_libs/build/$<CONFIG>/nnd.dll>
+          $<$<CONFIG:Release>:../../../externals/ma_libs/build/$<CONFIG>/cpp_nn.dll>
+          $<$<CONFIG:Debug>:../../../externals/ma_libs/build/$<CONFIG>/cpp_nnd.dll>
           ${CMAKE_BINARY_DIR}/../../$<CONFIG>
           )
       endmacro()
       cmake_language(CALL COPYDLL)
 else()
     target_link_libraries( ${PROJECT_NAME}
-        debug hdf5 debug nnd
-        optimized hdf5 optimized nn)
+        debug hdf5 debug cpp_nnd
+        optimized hdf5 optimized cpp_nn)
 endif()
 
 project(network3_bin)
@@ -117,20 +117,20 @@ if(MSVC)
       macro(COPYDLL)
         ADD_CUSTOM_COMMAND( TARGET ${PROJECT_NAME} POST_BUILD
           COMMAND ${CMAKE_COMMAND} -E copy
-          $<$<CONFIG:Release>:../../../externals/ma_libs/build/$<CONFIG>/alg_lapack.dll>
-          $<$<CONFIG:Debug>:../../../externals/ma_libs/build/$<CONFIG>/alg_lapackd.dll>
+          $<$<CONFIG:Release>:../../../externals/ma_libs/build/$<CONFIG>/cpp_alg_lapack.dll>
+          $<$<CONFIG:Debug>:../../../externals/ma_libs/build/$<CONFIG>/cpp_alg_lapackd.dll>
           ${CMAKE_BINARY_DIR}/../../$<CONFIG>
           )
         ADD_CUSTOM_COMMAND( TARGET ${PROJECT_NAME} POST_BUILD
           COMMAND ${CMAKE_COMMAND} -E copy
-          $<$<CONFIG:Release>:../../../externals/ma_libs/build/$<CONFIG>/nn.dll>
-          $<$<CONFIG:Debug>:../../../externals/ma_libs/build/$<CONFIG>/nnd.dll>
+          $<$<CONFIG:Release>:../../../externals/ma_libs/build/$<CONFIG>/cpp_nn.dll>
+          $<$<CONFIG:Debug>:../../../externals/ma_libs/build/$<CONFIG>/cpp_nnd.dll>
           ${CMAKE_BINARY_DIR}/../../$<CONFIG>
           )
       endmacro()
       cmake_language(CALL COPYDLL)
 else()
     target_link_libraries( ${PROJECT_NAME}
-        debug hdf5 debug nnd
-        optimized hdf5 optimized nn)
+        debug hdf5 debug cpp_nnd
+        optimized hdf5 optimized cpp_nn)
 endif()

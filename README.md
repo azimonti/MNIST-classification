@@ -37,8 +37,8 @@ Further update of the submodule can be done with the command:
 4. Compile the libraries in `ma_libs`
   ```
   cd externals/ma_libs
-  ./cbuild.sh --build-type Debug --cmake-params -DLIBNN=ON
-  ./cbuild.sh --build-type Release --cmake-params -DLIBNN=ON
+  ./cbuild.sh --build-type Debug --cmake-params -DCPP_LIBNN=ON
+  ./cbuild.sh --build-type Release --cmake-params -DCPP_LIBNN=ON
   cd ../..
   ```
 
