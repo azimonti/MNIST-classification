@@ -3,7 +3,7 @@ project(nnetworks_example)
 set (PROJECT_VERSION "1.0"    )
 project(${PROJECT_NAME} VERSION ${PROJECT_VERSION})
 
-# location of the ma_libs
+# location of the ma-libs
 set(MA_LIBS_ROOT "${CMAKE_SOURCE_DIR}/externals/ma-libs")
 set(MA_LIBS_CPP_ROOT "${MA_LIBS_ROOT}/cpp")
 
@@ -78,19 +78,19 @@ if(UNITYBUILD)
 endif()
 if(MSVC)
     target_link_libraries( ${PROJECT_NAME}
-        debug libhdf5_D debug zlibstaticd debug nnd
-        optimized libhdf5 optimized zlibstatic optimized nn )
+        debug libhdf5_D debug zlibstaticd debug cpp_nnd
+        optimized libhdf5 optimized zlibstatic optimized cpp_nn )
       macro(COPYDLL)
         ADD_CUSTOM_COMMAND( TARGET ${PROJECT_NAME} POST_BUILD
           COMMAND ${CMAKE_COMMAND} -E copy
-          $<$<CONFIG:Release>:../../../externals/ma_libs/build/$<CONFIG>/cpp_alg_lapack.dll>
-          $<$<CONFIG:Debug>:../../../externals/ma_libs/build/$<CONFIG>/cpp_alg_lapackd.dll>
+          $<$<CONFIG:Release>:../../../externals/ma-libs/build/$<CONFIG>/cpp_alg_lapack.dll>
+          $<$<CONFIG:Debug>:../../../externals/ma-libs/build/$<CONFIG>/cpp_alg_lapackd.dll>
           ${CMAKE_BINARY_DIR}/../../$<CONFIG>
           )
         ADD_CUSTOM_COMMAND( TARGET ${PROJECT_NAME} POST_BUILD
           COMMAND ${CMAKE_COMMAND} -E copy
-          $<$<CONFIG:Release>:../../../externals/ma_libs/build/$<CONFIG>/cpp_nn.dll>
-          $<$<CONFIG:Debug>:../../../externals/ma_libs/build/$<CONFIG>/cpp_nnd.dll>
+          $<$<CONFIG:Release>:../../../externals/ma-libs/build/$<CONFIG>/cpp_nn.dll>
+          $<$<CONFIG:Debug>:../../../externals/ma-libs/build/$<CONFIG>/cpp_nnd.dll>
           ${CMAKE_BINARY_DIR}/../../$<CONFIG>
           )
       endmacro()
@@ -112,19 +112,19 @@ if(UNITYBUILD)
 endif()
 if(MSVC)
     target_link_libraries( ${PROJECT_NAME}
-        debug libhdf5_D debug zlibstaticd debug nnd
-        optimized libhdf5 optimized zlibstatic optimized nn)
+        debug libhdf5_D debug zlibstaticd debug cpp_nnd
+        optimized libhdf5 optimized zlibstatic optimized cpp_nn)
       macro(COPYDLL)
         ADD_CUSTOM_COMMAND( TARGET ${PROJECT_NAME} POST_BUILD
           COMMAND ${CMAKE_COMMAND} -E copy
-          $<$<CONFIG:Release>:../../../externals/ma_libs/build/$<CONFIG>/cpp_alg_lapack.dll>
-          $<$<CONFIG:Debug>:../../../externals/ma_libs/build/$<CONFIG>/cpp_alg_lapackd.dll>
+          $<$<CONFIG:Release>:../../../externals/ma-libs/build/$<CONFIG>/cpp_alg_lapack.dll>
+          $<$<CONFIG:Debug>:../../../externals/ma-libs/build/$<CONFIG>/cpp_alg_lapackd.dll>
           ${CMAKE_BINARY_DIR}/../../$<CONFIG>
           )
         ADD_CUSTOM_COMMAND( TARGET ${PROJECT_NAME} POST_BUILD
           COMMAND ${CMAKE_COMMAND} -E copy
-          $<$<CONFIG:Release>:../../../externals/ma_libs/build/$<CONFIG>/cpp_nn.dll>
-          $<$<CONFIG:Debug>:../../../externals/ma_libs/build/$<CONFIG>/cpp_nnd.dll>
+          $<$<CONFIG:Release>:../../../externals/ma-libs/build/$<CONFIG>/cpp_nn.dll>
+          $<$<CONFIG:Debug>:../../../externals/ma-libs/build/$<CONFIG>/cpp_nnd.dll>
           ${CMAKE_BINARY_DIR}/../../$<CONFIG>
           )
       endmacro()
