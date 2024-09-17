@@ -34,15 +34,15 @@ Further update of the submodule can be done with the command:
   git submodule update --remote
   ```
 
-4. Compile the libraries in `ma_libs`
+4. Compile the libraries in `ma-libs`
   ```
-  cd externals/ma_libs
+  cd externals/ma-libs
   ./cbuild.sh --build-type Debug --cmake-params -DCPP_LIBNN=ON
   ./cbuild.sh --build-type Release --cmake-params -DCPP_LIBNN=ON
   cd ../..
   ```
 
-  If any error or missing dependencies please look at the instructions [here](https://github.com/azimonti/ma_libs)
+  If any error or missing dependencies please look at the instructions [here](https://github.com/azimonti/ma-libs)
 
 5. Dowload the MNIST data (source links were retrieved from the page [here](https://github.com/cvdfoundation/mnist) as the original page gives a 403 Forbidden error), but as far as are the original files and are put in the `data/MNIST/` directory it will be fine.
   ```

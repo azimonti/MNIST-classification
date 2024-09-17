@@ -1,3 +1,3 @@
-[submodule "externals/ma_libs"]
-	path = externals/ma_libs
-	url = https://github.com/azimonti/ma_libs.git
+[submodule "externals/ma-libs"]
+	path = externals/ma-libs
+	url = git@github.com:azimonti/ma-libs.git
