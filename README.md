@@ -37,6 +37,9 @@ Further update of the submodule can be done with the command:
 4. Compile the libraries in `ma-libs`
   ```
   cd externals/ma-libs
+  # optional steps if dependencies are not installed globally
+  # ./manage_dependency_libraries.sh -d
+  # ./manage_dependency_libraries.sh -b
   ./cbuild.sh --build-type Debug --cmake-params -DCPP_LIBNN=ON
   ./cbuild.sh --build-type Release --cmake-params -DCPP_LIBNN=ON
   cd ../..
@@ -118,7 +121,7 @@ Command-line Argument Handling:
 
 Training and Testing:
 
-- The network trains using the SGD algorithm, where `nepoch` determines the number of epochs (iterations) for training. 
+- The network trains using the SGD algorithm, where `nepoch` determines the number of epochs (iterations) for training.
 - After training, it can be used for testing on the MNIST dataset.
 
 Performance: The program achieves a good accuracy with 5 epochs, showing more tha 90% accuracy.
