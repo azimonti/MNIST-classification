@@ -3,7 +3,7 @@ project(nnetworks_example)
 set (PROJECT_VERSION "1.0"    )
 project(${PROJECT_NAME} VERSION ${PROJECT_VERSION})
 
-# location of the ma-libs
+# location of ma-libs
 set(MA_LIBS_ROOT "${CMAKE_SOURCE_DIR}/externals/ma-libs")
 set(MA_LIBS_CPP_ROOT "${MA_LIBS_ROOT}/cpp")
 
