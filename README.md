@@ -1,4 +1,4 @@
-# MNIST-classification
+# MNIST Classification
 
 Repository demonstrating neural network training for MNIST digit classification.
 
@@ -143,3 +143,15 @@ Training and Testing:
 Performance: Despite running for 3000 generations, the accuracy remains low, around 30%. This slow convergence is expected because Genetic Algorithms are not well-suited for optimizing neural networks on tasks like MNIST digit classification, where gradient-based methods such as SGD are more effective.
 
 The program not only highlights the limitations of Genetic Algorithms for efficient convergence on tasks like MNIST training but also serves as a demonstration of how to use my library, which can be applied to other tasks more suited for GA or where SGD is not applicable, such as simulating interactions in a game.
+
+## Contributing
+
+Contributions to the MNIST Classification project are welcome. Whether it's through submitting bug reports, proposing new features, or contributing to the code, your help is appreciated. For major changes, please open an issue first to discuss what you would like to change.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Contact
+
+If you have any questions or want to get in touch regarding the project, please open an issue or contact the repository maintainers directly through GitHub.

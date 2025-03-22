@@ -97,8 +97,8 @@ if(MSVC)
       cmake_language(CALL COPYDLL)
 else()
     target_link_libraries( ${PROJECT_NAME}
-        debug hdf5 debug cpp_nnd
-        optimized hdf5 optimized cpp_nn)
+        debug cpp_nnd
+        optimized cpp_nn)
 endif()
 
 project(network3_bin)
@@ -131,6 +131,6 @@ if(MSVC)
       cmake_language(CALL COPYDLL)
 else()
     target_link_libraries( ${PROJECT_NAME}
-        debug hdf5 debug cpp_nnd
-        optimized hdf5 optimized cpp_nn)
+        debug cpp_nnd
+        optimized cpp_nn)
 endif()
