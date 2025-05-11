@@ -1,7 +1,7 @@
 /************************/
 /*      main2.cpp       */
-/*    Version 1.0       */
-/*     2023/02/05       */
+/*    Version 2.0       */
+/*     2025/05/11       */
 /************************/
 
 #include <cstdlib>
@@ -11,13 +11,14 @@
 #include <stdexcept>
 #include <string>
 #include "algebra/matrix.h"
-#include "hdf5/hdf5_ext.h"
 #include "log/log.h"
 #include "ann_mlp_sgd_v1.h"
+#include "config_loader.h"
 #include "mnist.h"
+#include "mnist_sgd.h"
 
 constexpr const char* const IMAGESDIR  = "./data/MNIST";
-constexpr const char* const CONFIGFILE = "./build/config/nn2.hd5";
+constexpr const char* const CONFIGFILE = "./config.txt";
 
 int main(int argc, char** argv)
 {
@@ -27,12 +28,12 @@ int main(int argc, char** argv)
     if (argc > 1)
     {
         std::string arg = argv[1];
-        if (arg == "--training_start")
+        if (arg == "--start_training")
         {
             doTraining        = true;
             trainingFromStart = true;
         }
-        else if (arg == "--training_continue")
+        else if (arg == "--continue_training")
         {
             doTraining        = true;
             trainingFromStart = false;
@@ -56,20 +57,21 @@ int main(int argc, char** argv)
 
     if (!std::filesystem::exists(CONFIGFILE))
         throw std::runtime_error(std::string("File: ").append(CONFIGFILE).append(" not found. Exiting..."));
-    h5::H5ppReader h5(CONFIGFILE);
-    std::string nname, archiveFile;
-    h5.read("nn2/nname", nname);
-    h5.read("nn2/data_file", archiveFile);
+
+    if (!Config::loadConfiguration(CONFIGFILE))
+        throw std::runtime_error(std::string("Could not load configuration file: ").append(CONFIGFILE));
+
+    std::string nname       = Config::getString("nn2.nname");
+    std::string archiveFile = Config::getString("nn2.data_file");
 
     if (doTraining)
     {
-        std::string current_set;
-        h5.read("nn2/current_set", current_set);
+        std::string current_set = Config::getString("nn2.current_set");
         std::unique_ptr<nn::ANN_MLP_SGD<float>> nn1;
         if (trainingFromStart)
         {
-            std::vector<size_t> nnsize;
-            h5.read("nn2/" + current_set + "/size", nnsize);
+            std::vector<int> nnsize_int = Config::getVectorInt("nn2." + current_set + ".size");
+            std::vector<size_t> nnsize(nnsize_int.begin(), nnsize_int.end());
             nn1 = std::make_unique<nn::ANN_MLP_SGD<float>>(nnsize);
             // nn1 = std::make_unique<nn::ANN_MLP_SGD<float>>(std::vector<size_t>{784, 30, 10});
             // nn1 = std::make_unique<nn::ANN_MLP_SGD<float>>(std::vector<size_t>{784, 64, 16, 10});
@@ -81,13 +83,11 @@ int main(int argc, char** argv)
             nn1->SetName(nname);
             nn1->Deserialize(archiveFile);
         }
-        size_t nEpochs, miniBatchSize;
-        double eta;
-        h5.read("nn2/" + current_set + "/nEpochs", nEpochs);
-        h5.read("nn2/" + current_set + "/miniBatchSize", miniBatchSize);
-        h5.read("nn2/" + current_set + "/eta", eta);
+        size_t nEpochs       = static_cast<size_t>(Config::getInt("nn2." + current_set + ".nEpochs"));
+        size_t miniBatchSize = static_cast<size_t>(Config::getInt("nn2." + current_set + ".miniBatchSize"));
+        double eta           = Config::getDouble("nn2." + current_set + ".eta");
 
-        nn::MNIST imgTrain = nn::MNIST(IMAGESDIR, true, false);
+        nn::MNIST imgTrain   = nn::MNIST(IMAGESDIR, true, false);
         std::vector<std::vector<float>> images;
         std::vector<std::vector<float>> labels;
         for (const auto& img : imgTrain.Images())
@@ -104,8 +104,11 @@ int main(int argc, char** argv)
             for (const auto& val : lbl) { flbl.push_back(static_cast<float>(val)); }
             labels.push_back(flbl);
         }
-        nn1->TrainSGD(images, labels, nEpochs, miniBatchSize, eta);
-        // nn1->TrainSGD(images, labels, 5, 10, 3.0);
+
+        mnist_sgd_trainer::MNIST_SGD_Manager<float> sgd_manager;
+        sgd_manager.train(*nn1, images, labels, nEpochs, miniBatchSize, eta,
+                          true); // Added shuffle=true, adjust if needed
+        // nn1->TrainSGD(images, labels, 5, 10, 3.0); // Old call
         nn1->Serialize(archiveFile);
         LOGGER(logging::INFO) << std::string("*** Training completed");
     }
@@ -131,7 +134,9 @@ int main(int argc, char** argv)
             for (const auto& val : lbl) { flbl.push_back(static_cast<float>(val)); }
             labels.push_back(flbl);
         }
-        int correct    = nn2.TestSGD(images, labels);
+
+        mnist_sgd_trainer::MNIST_SGD_Manager<float> sgd_manager;
+        int correct    = sgd_manager.test(nn2, images, labels);
         const int size = (int)imgTest.Images().size();
         LOGGER(logging::INFO) << (std::string("*** Correct: ") + std::to_string(correct) + std::string(" / ") +
                                   std::to_string(size) + " (" +

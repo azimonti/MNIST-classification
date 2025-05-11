@@ -1,0 +1,28 @@
+# Configuration for Neural Networks
+
+# Settings for nn2
+nn2.nname = network_sgd
+nn2.data_file = ./externals/ma-libs/build/data_network2.txt
+nn2.current_set = cfg_1
+
+# nn2, cfg_1
+nn2.cfg_1.size = 784,30,10
+nn2.cfg_1.nEpochs = 5
+nn2.cfg_1.miniBatchSize = 10
+nn2.cfg_1.eta = 3.0
+
+# nn2, cfg_2
+nn2.cfg_2.size = 784,64,16,10
+nn2.cfg_2.nEpochs = 5
+nn2.cfg_2.miniBatchSize = 10
+nn2.cfg_2.eta = 3.0
+
+# Settings for nn3
+nn3.nname = network_ga
+nn3.data_file = ./externals/ma-libs/build/data_network3.txt
+nn3.current_set = cfg_1
+
+# nn3, cfg_1
+nn3.cfg_1.size = 784,30,10
+nn3.cfg_1.nGenerations = 5000
+nn3.cfg_1.BatchSize = 200

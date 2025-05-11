@@ -1,7 +1,7 @@
 /************************/
 /*      main3.cpp       */
-/*    Version 1.0       */
-/*     2023/02/19       */
+/*    Version 2.0       */
+/*     2025/05/11       */
 /************************/
 
 #include <cstdlib>
@@ -10,13 +10,14 @@
 #include <memory>
 #include <stdexcept>
 #include <string>
-#include "hdf5/hdf5_ext.h"
 #include "log/log.h"
 #include "ann_mlp_ga_v1.h"
+#include "config_loader.h"
 #include "mnist.h"
+#include "mnist_ga.h"
 
 constexpr const char* const IMAGESDIR  = "./data/MNIST";
-constexpr const char* const CONFIGFILE = "./build/config/nn3.hd5";
+constexpr const char* const CONFIGFILE = "./config.txt";
 
 int main(int argc, char** argv)
 {
@@ -26,12 +27,12 @@ int main(int argc, char** argv)
     if (argc > 1)
     {
         std::string arg = argv[1];
-        if (arg == "--training_start")
+        if (arg == "--start_training")
         {
             doTraining        = true;
             trainingFromStart = true;
         }
-        else if (arg == "--training_continue")
+        else if (arg == "--continue_training")
         {
             doTraining        = true;
             trainingFromStart = false;
@@ -55,23 +56,25 @@ int main(int argc, char** argv)
 
     if (!std::filesystem::exists(CONFIGFILE))
         throw std::runtime_error(std::string("File: ").append(CONFIGFILE).append(" not found. Exiting..."));
-    h5::H5ppReader h5(CONFIGFILE);
-    std::string nname, archiveFile;
-    h5.read("nn3/nname", nname);
-    h5.read("nn3/data_file", archiveFile);
+
+    if (!Config::loadConfiguration(CONFIGFILE))
+        throw std::runtime_error(std::string("Could not load configuration file: ").append(CONFIGFILE));
+
+    std::string nname       = Config::getString("nn3.nname");
+    std::string archiveFile = Config::getString("nn3.data_file");
 
     if (doTraining)
     {
-        std::string current_set;
-        h5.read("nn3/current_set", current_set);
+        std::string current_set = Config::getString("nn3.current_set");
         std::unique_ptr<nn::ANN_MLP_GA<float>> nn1;
         if (trainingFromStart)
         {
-            std::vector<size_t> nnsize;
-            h5.read("nn3/" + current_set + "/size", nnsize);
+            std::vector<int> nnsize_int = Config::getVectorInt("nn3." + current_set + ".size");
+            std::vector<size_t> nnsize(nnsize_int.begin(), nnsize_int.end());
             nn1 = std::make_unique<nn::ANN_MLP_GA<float>>(nnsize);
             // nn1 = std::make_unique<nn::ANN_MLP_GA<float>>(std::vector<size_t>{784, 30, 10});
             nn1->SetName(nname);
+            nn1->SetPopulationStrategy(nn::PopulationStrategy::MIXED_WITH_RANDOM_INJECTION, 0.3);
         }
         else
         {
@@ -79,11 +82,10 @@ int main(int argc, char** argv)
             nn1->SetName(nname);
             nn1->Deserialize(archiveFile);
         }
-        size_t nGenerations, BatchSize;
-        h5.read("nn3/" + current_set + "/nGenerations", nGenerations);
-        h5.read("nn3/" + current_set + "/BatchSize", BatchSize);
+        size_t nGenerations = static_cast<size_t>(Config::getInt("nn3." + current_set + ".nGenerations"));
+        size_t BatchSize    = static_cast<size_t>(Config::getInt("nn3." + current_set + ".BatchSize"));
 
-        nn::MNIST imgTrain = nn::MNIST(IMAGESDIR, true, false);
+        nn::MNIST imgTrain  = nn::MNIST(IMAGESDIR, true, false);
         std::vector<std::vector<float>> images;
         std::vector<std::vector<float>> labels;
         for (const auto& img : imgTrain.Images())
@@ -100,9 +102,10 @@ int main(int argc, char** argv)
             for (const auto& val : lbl) { flbl.push_back(static_cast<float>(val)); }
             labels.push_back(flbl);
         }
-        nn1->SetMixed(true);
-        nn1->TrainGA(images, labels, nGenerations, BatchSize, true);
-        // nn1->TrainGA(images, labels, 50, 200, true);
+
+        mnist_ga_trainer::MNIST_GA_Manager<float> ga_manager;
+        ga_manager.train(*nn1, images, labels, nGenerations, BatchSize, true);
+        // nn1->TrainGA(images, labels, 50, 200, true); // Old call
         nn1->Serialize(archiveFile);
         LOGGER(logging::INFO) << std::string("*** Training completed");
     }
@@ -128,7 +131,9 @@ int main(int argc, char** argv)
             for (const auto& val : lbl) { flbl.push_back(static_cast<float>(val)); }
             labels.push_back(flbl);
         }
-        int correct    = nn2.TestGA(images, labels);
+
+        mnist_ga_trainer::MNIST_GA_Manager<float> ga_manager;
+        int correct    = ga_manager.test(nn2, images, labels);
         const int size = (int)imgTest.Images().size();
         LOGGER(logging::INFO) << (std::string("*** Correct: ") + std::to_string(correct) + std::string(" / ") +
                                   std::to_string(size) + " (" +

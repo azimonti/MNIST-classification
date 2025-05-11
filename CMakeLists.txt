@@ -15,23 +15,11 @@ include( FindLIBS           )
 set(CMAKE_CXX_STANDARD 17   )
 add_definitions( -DLOGGING -DCOUTEXT )
 
-if(MSVC)
-    generic_libs_find(hdf5 ON       )
-    generic_libs_find(zlib ON       )
-    include_directories( ${HDF5_INCLUDE_DIRS}/src       )
-    include_directories( ${HDF5_INCLUDE_DIRS2}/hdf5     )
-    link_directories( ${ZLIB_LIBRARY_PATH}              )
-else()
-    generic_libs_find(hdf5 OFF      )
-    add_compile_options(-Wall -Wextra -pedantic -Wconversion -Wno-float-conversion)
-endif()
-
-include_directories( ${MATPLOT_INCLUDE_DIRS} )
-include_directories( ${HDF5_INCLUDE_DIRS}    )
-include_directories( ${MA_LIBS_CPP_ROOT}                )
-include_directories( ${MA_LIBS_CPP_ROOT}/math           )
-include_directories( ${MA_LIBS_CPP_ROOT}/libnn/src      )
-include_directories( ${MA_LIBS_CPP_ROOT}/utils          )
+include_directories( "${MA_LIBS_CPP_ROOT}"                            )
+include_directories( "${MA_LIBS_CPP_ROOT}/math"                       )
+include_directories( "${MA_LIBS_CPP_ROOT}/libnn/src"                  )
+include_directories( "${MA_LIBS_CPP_ROOT}/libconfig_loader/src"       )
+include_directories( "${MA_LIBS_CPP_ROOT}/utils"                      )
 
 add_definitions( -DLOGGING )
 
@@ -50,87 +38,36 @@ project(network1_bin)
 set ( SRCS ./src/main1.cpp )
 
 link_directories( ${LIBS_DIR}                          )
-link_directories( ${HDF5_LIBRARY_PATH}                 )
+# link_directories( ${HDF5_LIBRARY_PATH}                 ) # Removed HDF5
 add_executable( ${PROJECT_NAME} ${SRCS} $<TARGET_OBJECTS:objnnetworks>  )
 if(UNITYBUILD)
     set_property( TARGET ${PROJECT_NAME} PROPERTY UNITY_BUILD ON        )
-endif()
-if(MSVC)
-    target_link_libraries( ${PROJECT_NAME}
-        debug libhdf5_D zlibstaticd
-        optimized libhdf5 zlibstatic )
-else()
-    target_link_libraries( ${PROJECT_NAME}
-        debug hdf5
-        optimized hdf5 )
 endif()
 
 link_directories( ${MA_LIBS_ROOT}/build/${CMAKE_BUILD_TYPE} )
 
 project(network2_bin)
-set ( SRCS ./src/main2.cpp )
+set ( SRCS ./src/main2.cpp ./src/mnist_sgd.cpp )
 
 link_directories( ${LIBS_DIR}                          )
-link_directories( ${HDF5_LIBRARY_PATH}                 )
+# link_directories( ${HDF5_LIBRARY_PATH}                 ) # Removed HDF5
 add_executable( ${PROJECT_NAME} ${SRCS} $<TARGET_OBJECTS:objnnetworks>  )
 if(UNITYBUILD)
     set_property( TARGET ${PROJECT_NAME} PROPERTY UNITY_BUILD ON        )
 endif()
-if(MSVC)
-    target_link_libraries( ${PROJECT_NAME}
-        debug libhdf5_D debug zlibstaticd debug cpp_nnd
-        optimized libhdf5 optimized zlibstatic optimized cpp_nn )
-      macro(COPYDLL)
-        ADD_CUSTOM_COMMAND( TARGET ${PROJECT_NAME} POST_BUILD
-          COMMAND ${CMAKE_COMMAND} -E copy
-          $<$<CONFIG:Release>:../../../externals/ma-libs/build/$<CONFIG>/cpp_alg_lapack.dll>
-          $<$<CONFIG:Debug>:../../../externals/ma-libs/build/$<CONFIG>/cpp_alg_lapackd.dll>
-          ${CMAKE_BINARY_DIR}/../../$<CONFIG>
-          )
-        ADD_CUSTOM_COMMAND( TARGET ${PROJECT_NAME} POST_BUILD
-          COMMAND ${CMAKE_COMMAND} -E copy
-          $<$<CONFIG:Release>:../../../externals/ma-libs/build/$<CONFIG>/cpp_nn.dll>
-          $<$<CONFIG:Debug>:../../../externals/ma-libs/build/$<CONFIG>/cpp_nnd.dll>
-          ${CMAKE_BINARY_DIR}/../../$<CONFIG>
-          )
-      endmacro()
-      cmake_language(CALL COPYDLL)
-else()
-    target_link_libraries( ${PROJECT_NAME}
-        debug cpp_nnd
-        optimized cpp_nn)
-endif()
+
+target_link_libraries( ${PROJECT_NAME} debug cpp_nn_blasd debug config_loaderd
+  optimized cpp_nn_blas optimized config_loader)
 
 project(network3_bin)
-set ( SRCS ./src/main3.cpp )
+set ( SRCS ./src/main3.cpp ./src/mnist_ga.cpp )
 
 link_directories( ${LIBS_DIR}                          )
-link_directories( ${HDF5_LIBRARY_PATH}                 )
+# link_directories( ${HDF5_LIBRARY_PATH}                 ) # Removed HDF5
 add_executable( ${PROJECT_NAME} ${SRCS} $<TARGET_OBJECTS:objnnetworks>  )
 if(UNITYBUILD)
     set_property( TARGET ${PROJECT_NAME} PROPERTY UNITY_BUILD ON        )
 endif()
-if(MSVC)
-    target_link_libraries( ${PROJECT_NAME}
-        debug libhdf5_D debug zlibstaticd debug cpp_nnd
-        optimized libhdf5 optimized zlibstatic optimized cpp_nn)
-      macro(COPYDLL)
-        ADD_CUSTOM_COMMAND( TARGET ${PROJECT_NAME} POST_BUILD
-          COMMAND ${CMAKE_COMMAND} -E copy
-          $<$<CONFIG:Release>:../../../externals/ma-libs/build/$<CONFIG>/cpp_alg_lapack.dll>
-          $<$<CONFIG:Debug>:../../../externals/ma-libs/build/$<CONFIG>/cpp_alg_lapackd.dll>
-          ${CMAKE_BINARY_DIR}/../../$<CONFIG>
-          )
-        ADD_CUSTOM_COMMAND( TARGET ${PROJECT_NAME} POST_BUILD
-          COMMAND ${CMAKE_COMMAND} -E copy
-          $<$<CONFIG:Release>:../../../externals/ma-libs/build/$<CONFIG>/cpp_nn.dll>
-          $<$<CONFIG:Debug>:../../../externals/ma-libs/build/$<CONFIG>/cpp_nnd.dll>
-          ${CMAKE_BINARY_DIR}/../../$<CONFIG>
-          )
-      endmacro()
-      cmake_language(CALL COPYDLL)
-else()
-    target_link_libraries( ${PROJECT_NAME}
-        debug cpp_nnd
-        optimized cpp_nn)
-endif()
+
+target_link_libraries( ${PROJECT_NAME} debug cpp_nn_blasd debug config_loaderd
+  optimized cpp_nn_blas optimized config_loader)

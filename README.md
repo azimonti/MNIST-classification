@@ -34,39 +34,23 @@ Further update of the submodule can be done with the command:
   git submodule update --remote
   ```
 
-4. Compile the libraries in `ma-libs`
-  ```
-  cd externals/ma-libs
-  # optional steps if dependencies are not installed globally
-  # ./manage_dependency_libraries.sh -d
-  # ./manage_dependency_libraries.sh -b
-  ./cbuild.sh --build-type Debug --cmake-params -DCPP_LIBNN=ON
-  ./cbuild.sh --build-type Release --cmake-params -DCPP_LIBNN=ON
-  cd ../..
-  ```
-
-  If any error or missing dependencies please look at the instructions [here](https://github.com/azimonti/ma-libs)
-
-5. Dowload the MNIST data (source links were retrieved from the page [here](https://github.com/cvdfoundation/mnist) as the original page gives a 403 Forbidden error), but as far as are the original files and are put in the `data/MNIST/` directory it will be fine.
+4. Dowload the MNIST data (source links were retrieved from the page [here](https://github.com/cvdfoundation/mnist) as the original page gives a 403 Forbidden error), but as far as are the original files and are put in the `data/MNIST/` directory it will be fine.
   ```
   bash download_mnist_data.sh
   ```
 
-6. Compile the binaries
+5. Compile the binaries and the libraries
   ```
-  ./cbuild.sh -t Release (or -t Debug)
-  ```
-
-7. Create the configuation files
-  ```
-  python nn_config.py
+  ./build_libs.sh
   ```
 
-8. Run the simulations
+  If any error or missing dependencies for `ma-libs` please look at the instructions [here](https://github.com/azimonti/ma-libs)
+
+6. Run the simulations`
   ```
   ./build/Release/network1_bin
-  ./build/Release/network2_bin --training_start
-  ./build/Release/network3_bin --training_start
+  ./build/Release/network2_bin --start_training
+  ./build/Release/network3_bin --start_training
   ```
 
 ## Program 1
@@ -115,8 +99,8 @@ Sample : 36 - Results is: 7
 The program `network2_bin` is designed to handle both training and testing of a neural network model using the Stochastic Gradient Descent (SGD) algorithm on the MNIST dataset. It supports the following modes based on command-line arguments:
 
 Command-line Argument Handling:
-- `--training_start`: Starts training from scratch.
-- `--training_continue`: Continues training from a previously saved state.
+- `--start_training`: Starts training from scratch.
+- `--continue_training`: Continues training from a previously saved state.
 - `--testing`: Skips training and directly proceeds with testing the model.
 
 Training and Testing:
@@ -131,8 +115,8 @@ Performance: The program achieves a good accuracy with 5 epochs, showing more th
 The program `network3_bin` uses a Genetic Algorithm (GA) for training a neural network on the MNIST dataset. Like the other programs, it accepts command-line arguments to control whether it should start training from scratch, continue training, or run in testing mode:
 
 Command-line Argument Handling:
-- `--training_start`: Starts training from scratch.
-- `--training_continue`: Continues training from a previously saved state.
+- `--start_training`: Starts training from scratch.
+- `--continue_training`: Continues training from a previously saved state.
 - `--testing`: Skips training and directly proceeds with testing the model.
 
 Training and Testing:
